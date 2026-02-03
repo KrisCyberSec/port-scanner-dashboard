@@ -29,15 +29,35 @@ def scan_port(ip, port):
     try:
         # Create a socket object
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        sock.settimeout(1) # 1 second timeout for speed
+        sock.settimeout(1.5) # Slightly longer timeout for banner/response
         result = sock.connect_ex((ip, port))
-        sock.close()
         
         service = COMMON_PORTS.get(port, "Unknown")
+        banner = "No service banner"
         
         if result == 0:
-            return {"port": port, "status": "Open", "service": service}
+            # Banner Grabbing: Try to read the service version
+            try:
+                # If it's a web port, we often need to "speak" first to get a reply
+                if port in [80, 8080, 3000, 5000]:
+                    sock.send(b'HEAD / HTTP/1.1\r\n\r\n')
+                
+                # Listen for a response
+                banner_bytes = sock.recv(1024)
+                
+                # Cleanup and decode the banner
+                banner = banner_bytes.decode('utf-8', errors='ignore').strip()
+                # If it's an HTTP response, just grab the first line (Server version usually)
+                if '\n' in banner:
+                    banner = banner.split('\n')[0]
+            except:
+                # If it connects but stays silent (timeout), allow it
+                pass
+                
+            sock.close()
+            return {"port": port, "status": "Open", "service": service, "banner": banner}
         else:
+            sock.close()
             return {"port": port, "status": "Closed", "service": service}
     except Exception as e:
         return {"port": port, "status": "Error", "service": "Unknown", "error": str(e)}

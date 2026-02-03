@@ -3,14 +3,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const targetInput = document.getElementById('target-input');
     const resultsBody = document.getElementById('results-body');
     const targetDisplay = document.getElementById('target-display');
-    
+
     // Stats elements
     const totalScannedEl = document.getElementById('total-scanned');
     const openPortsEl = document.getElementById('open-ports');
     const scanTimeEl = document.getElementById('scan-time');
 
     scanBtn.addEventListener('click', startScan);
-    
+
     // Allow 'Enter' key to trigger scan
     targetInput.addEventListener('keypress', (e) => {
         if (e.key === 'Enter') startScan();
@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const data = await response.json();
             const endTime = performance.now();
-            
+
             if (response.ok) {
                 renderResults(data);
                 updateStats(data.results, endTime - startTime);
@@ -87,12 +87,12 @@ document.addEventListener('DOMContentLoaded', () => {
         data.results.forEach(result => {
             const row = document.createElement('tr');
             const statusClass = result.status.toLowerCase() === 'open' ? 'open' : 'closed';
-            
+
             row.innerHTML = `
                 <td style="font-family: monospace; color: var(--primary);">${result.port}</td>
                 <td>${result.service}</td>
                 <td><span class="status-badge ${statusClass}">${result.status.toUpperCase()}</span></td>
-                <td style="color: var(--text-muted); font-size: 0.8em;">TCP Connect</td>
+                <td style="color: var(--text-muted); font-size: 0.8em; font-family: monospace;">${result.banner || '-'}</td>
             `;
             fragment.appendChild(row);
         });

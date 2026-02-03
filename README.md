@@ -4,6 +4,7 @@ A modern, web-based network port scanner built with Python (Flask) and a custom 
 
 ## Features
 - **Real-time Port Scanning**: Utilizing Python's socket library and multi-threading for speed.
+- **Service Version Detection**: Automated banner grabbing to identify software versions running on open ports.
 - **Visual Dashboard**: A clean, dark-mode interface to visualize scan results.
 - **Service Detection**: Identifies common services running on open ports.
 
