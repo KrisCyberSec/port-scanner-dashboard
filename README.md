@@ -1,31 +1,20 @@
-# CyberScout - Visual Network Scanner
+# Network Port Scanner Dashboard
 
-A modern, web-based network port scanner built with Python (Flask) and a custom glassmorphism UI.
+This project is a custom-built network scanner designed to perform reconnaissance on target IP addresses. I built this to gain a deeper understanding of low-level networking concepts like TCP handshakes and socket programming, while also creating a modern dashboard to visualize the data.
 
-## Features
-- **Real-time Port Scanning**: Utilizing Python's socket library and multi-threading for speed.
-- **Service Version Detection**: Automated banner grabbing to identify software versions running on open ports.
-- **Visual Dashboard**: A clean, dark-mode interface to visualize scan results.
-- **Service Detection**: Identifies common services running on open ports.
+## How It Works
+The backend uses Python's `socket` library to attempt TCP connections on common ports. It utilizes `concurrent.futures` to multi-thread the scanning process for speed. 
 
-## Tech Stack
-- **Backend**: Python 3, Flask
-- **Frontend**: HTML5, CSS3 (Glassmorphism), Vanilla JavaScript
+- **Port Detection**: Identifies open vs closed ports.
+- **Banner Grabbing**: Sends probe packets to open ports to capture service version banners (e.g., Apache/2.4, SSH).
+- **Frontend**: A Flask server streams the results to a Javascript-powered dashboard.
 
-## Setup & Run
+## Technology Used
+- **Python 3** (Sockets, Threading)
+- **Flask** (API & Web Server)
+- **Frontend**: HTML/CSS/JS (Custom dark UI)
 
-1. **Install Dependencies**
-   ```bash
-   pip3 install -r requirements.txt
-   ```
-
-2. **Start the Application**
-   ```bash
-   python3 app.py
-   ```
-
-3. **Access Dashboard**
-   Open your browser and navigate to: `http://localhost:3000`
-
-## Disclaimer
-This tool is for educational purposes and authorized network testing only. Do not scan networks you do not own or have permission to test.
+## Running the Project
+1. Install requirements: `pip3 install -r requirements.txt`
+2. Run the scanner: `python3 app.py`
+3. View at: `http://localhost:3000`
