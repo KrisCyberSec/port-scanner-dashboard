@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CyberScout | Port Scanner</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="app-container">
+        <header>
+            <div class="logo">
+                <div class="logo-icon"></div>
+                <h1>CyberScout</h1>
+            </div>
+            <div class="status-indicator online">System Ready</div>
+        </header>
+
+        <main>
+            <section class="control-panel">
+                <div class="input-group">
+                    <label for="target-input">Target Host / IP</label>
+                    <div class="input-wrapper">
+                        <input type="text" id="target-input" placeholder="e.g., google.com or 192.168.1.1" value="127.0.0.1">
+                        <button id="scan-btn">
+                            <span class="btn-text">Initialize Scan</span>
+                            <div class="btn-shine"></div>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <section class="results-panel">
+                <div class="panel-header">
+                    <h2>Scan Telemetry</h2>
+                    <span id="target-display" class="target-badge">Waiting for input...</span>
+                </div>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-label">Ports Scanned</span>
+                        <span class="stat-value" id="total-scanned">0</span>
+                    </div>
+                    <div class="stat-card secure">
+                        <span class="stat-label">Open Ports</span>
+                        <span class="stat-value" id="open-ports">0</span>
+                    </div>
+                    <div class="stat-card warning">
+                        <span class="stat-label">Response Time</span>
+                        <span class="stat-value" id="scan-time">0ms</span>
+                    </div>
+                </div>
+
+                <div class="results-table-wrapper">
+                    <table class="results-table">
+                        <thead>
+                            <tr>
+                                <th>Port</th>
+                                <th>Service</th>
+                                <th>Status</th>
+                                <th>Detail</th>
+                            </tr>
+                        </thead>
+                        <tbody id="results-body">
+                            <!-- Results inject here -->
+                            <tr class="empty-state">
+                                <td colspan="4">Initiate a scan to view network topology</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
