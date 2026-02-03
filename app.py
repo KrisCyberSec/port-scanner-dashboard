@@ -2,8 +2,72 @@ from flask import Flask, render_template, request, jsonify
 import socket
 import concurrent.futures
 import time
+import subprocess
+import platform
 
 app = Flask(__name__)
+
+def get_local_ip():
+    try:
+        # Connect to an external server (doesn't actually send data) to get local interface IP
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.connect(("8.8.8.8", 80))
+        local_ip = s.getsockname()[0]
+        s.close()
+        return local_ip
+    except:
+        return "127.0.0.1"
+
+def ping_host(ip):
+    # Determine the ping command based on OS (Network+ Tip: OS differences matter!)
+    param = '-n' if platform.system().lower() == 'windows' else '-c'
+    timeout_param = '-w' if platform.system().lower() == 'windows' else '-W'
+    timeout_val = '500' # 500ms timeout
+    
+    # Building the command: ping -c 1 -W 500 <ip>
+    command = ['ping', param, '1', timeout_param, timeout_val, ip]
+    
+    try:
+        # Run ping and hide output
+        result = subprocess.call(command, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        if result == 0:
+            return {"ip": ip, "status": "Active", "type": "Unknown Device"}
+        return None
+    except:
+        return None
+
+@app.route('/scan_network', methods=['POST'])
+def scan_network():
+    local_ip = get_local_ip()
+    # Assume /24 subnet (Standard Home Network) - standard Network+ concept
+    # If IP is 192.168.1.5, network is 192.168.1.0/24
+    subnet = '.'.join(local_ip.split('.')[:-1]) + '.' 
+    
+    active_hosts = []
+    
+    # Scan .1 to .254
+    with concurrent.futures.ThreadPoolExecutor(max_workers=50) as executor:
+        futures = []
+        for i in range(1, 255):
+            ip = f"{subnet}{i}"
+            futures.append(executor.submit(ping_host, ip))
+            
+        for future in concurrent.futures.as_completed(futures):
+            result = future.result()
+            if result:
+                # Mark our own device
+                if result['ip'] == local_ip:
+                    result['type'] = "This Device (You)"
+                active_hosts.append(result)
+
+    # Sort by IP address
+    active_hosts.sort(key=lambda x: int(x['ip'].split('.')[-1]))
+
+    return jsonify({
+        "network": f"{subnet}0/24",
+        "local_ip": local_ip,
+        "hosts": active_hosts
+    })
 
 # List of common ports to scan for the demo
 COMMON_PORTS = {

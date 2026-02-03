@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,6 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
+
 <body>
     <div class="app-container">
         <header>
@@ -20,61 +22,106 @@
         </header>
 
         <main>
-            <section class="control-panel">
-                <div class="input-group">
-                    <label for="target-input">Target Host / IP</label>
-                    <div class="input-wrapper">
-                        <input type="text" id="target-input" placeholder="e.g., google.com or 192.168.1.1" value="127.0.0.1">
-                        <button id="scan-btn">
-                            <span class="btn-text">Initialize Scan</span>
-                            <div class="btn-shine"></div>
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="scanner">Port Scanner</button>
+                <button class="tab-btn" data-tab="network">Network Map</button>
+            </div>
+
+            <!-- PORT SCANNER TAB -->
+            <div id="scanner-view" class="view-section active">
+                <section class="control-panel">
+                    <div class="input-group">
+                        <label for="target-input">Target Host / IP</label>
+                        <div class="input-wrapper">
+                            <input type="text" id="target-input" placeholder="e.g., google.com or 192.168.1.1"
+                                value="127.0.0.1">
+                            <button id="scan-btn">
+                                <span class="btn-text">Initialize Scan</span>
+                                <div class="btn-shine"></div>
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="results-panel">
+                    <div class="panel-header">
+                        <h2>Scan Telemetry</h2>
+                        <span id="target-display" class="target-badge">Waiting for input...</span>
+                    </div>
+
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <span class="stat-label">Ports Scanned</span>
+                            <span class="stat-value" id="total-scanned">0</span>
+                        </div>
+                        <div class="stat-card secure">
+                            <span class="stat-label">Open Ports</span>
+                            <span class="stat-value" id="open-ports">0</span>
+                        </div>
+                        <div class="stat-card warning">
+                            <span class="stat-label">Response Time</span>
+                            <span class="stat-value" id="scan-time">0ms</span>
+                        </div>
+                    </div>
+
+                    <div class="results-table-wrapper">
+                        <table class="results-table">
+                            <thead>
+                                <tr>
+                                    <th>Port</th>
+                                    <th>Service</th>
+                                    <th>Status</th>
+                                    <th>Detail</th>
+                                </tr>
+                            </thead>
+                            <tbody id="results-body">
+                                <tr class="empty-state">
+                                    <td colspan="4">Initiate a scan to view network topology</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
+
+            <!-- NETWORK MAP TAB -->
+            <div id="network-view" class="view-section" style="display: none;">
+                <section class="control-panel">
+                    <div class="panel-header">
+                        <div>
+                            <h2>Local Network Map</h2>
+                            <p style="color: var(--text-muted); font-size: 0.9em; margin-top: 4px;">Identify active
+                                devices on your subnet (Ping Sweep)</p>
+                        </div>
+                        <button id="net-scan-btn">
+                            <span class="btn-text">Scan Network</span>
                         </button>
                     </div>
-                </div>
-            </section>
+                </section>
 
-            <section class="results-panel">
-                <div class="panel-header">
-                    <h2>Scan Telemetry</h2>
-                    <span id="target-display" class="target-badge">Waiting for input...</span>
-                </div>
-                
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <span class="stat-label">Ports Scanned</span>
-                        <span class="stat-value" id="total-scanned">0</span>
+                <section class="results-panel" style="margin-top: 20px;">
+                    <div class="results-table-wrapper">
+                        <table class="results-table">
+                            <thead>
+                                <tr>
+                                    <th>IP Address</th>
+                                    <th>Status</th>
+                                    <th>Type</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="net-results-body">
+                                <tr class="empty-state">
+                                    <td colspan="4">Click 'Scan Network' to sweep the subnet.</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
-                    <div class="stat-card secure">
-                        <span class="stat-label">Open Ports</span>
-                        <span class="stat-value" id="open-ports">0</span>
-                    </div>
-                    <div class="stat-card warning">
-                        <span class="stat-label">Response Time</span>
-                        <span class="stat-value" id="scan-time">0ms</span>
-                    </div>
-                </div>
-
-                <div class="results-table-wrapper">
-                    <table class="results-table">
-                        <thead>
-                            <tr>
-                                <th>Port</th>
-                                <th>Service</th>
-                                <th>Status</th>
-                                <th>Detail</th>
-                            </tr>
-                        </thead>
-                        <tbody id="results-body">
-                            <!-- Results inject here -->
-                            <tr class="empty-state">
-                                <td colspan="4">Initiate a scan to view network topology</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </section>
+                </section>
+            </div>
         </main>
     </div>
     <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
+
 </html>

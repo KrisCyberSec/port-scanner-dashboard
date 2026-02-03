@@ -6,6 +6,7 @@ This project is a custom-built network scanner designed to perform reconnaissanc
 The backend uses Python's `socket` library to attempt TCP connections on common ports. It utilizes `concurrent.futures` to multi-thread the scanning process for speed. 
 
 - **Port Detection**: Identifies open vs closed ports.
+- **Subnet Discovery**: Scans local network (ARP/Ping sweep) to find active devices.
 - **Banner Grabbing**: Sends probe packets to open ports to capture service version banners (e.g., Apache/2.4, SSH).
 - **Frontend**: A Flask server streams the results to a Javascript-powered dashboard.
 
