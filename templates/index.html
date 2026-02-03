@@ -46,7 +46,12 @@
                 <section class="results-panel">
                     <div class="panel-header">
                         <h2>Scan Telemetry</h2>
-                        <span id="target-display" class="target-badge">Waiting for input...</span>
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <span id="target-display" class="target-badge">Waiting for input...</span>
+                            <button id="export-btn"
+                                style="background: rgba(255,255,255,0.1); border: 1px solid var(--border); color: white; padding: 4px 12px; border-radius: 6px; cursor: pointer; display: none;">Export
+                                JSON</button>
+                        </div>
                     </div>
 
                     <div class="stats-grid">

@@ -15,6 +15,22 @@ document.addEventListener('DOMContentLoaded', () => {
     const netResultsBody = document.getElementById('net-results-body');
     const tabs = document.querySelectorAll('.tab-btn');
     const views = document.querySelectorAll('.view-section');
+    const exportBtn = document.getElementById('export-btn');
+
+    let lastScanData = null;
+
+    if (exportBtn) {
+        exportBtn.addEventListener('click', () => {
+            if (!lastScanData) return;
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(lastScanData, null, 2));
+            const downloadAnchorNode = document.createElement('a');
+            downloadAnchorNode.setAttribute("href", dataStr);
+            downloadAnchorNode.setAttribute("download", `scan_report_${lastScanData.target || 'unknown'}.json`);
+            document.body.appendChild(downloadAnchorNode); // required for firefox
+            downloadAnchorNode.click();
+            downloadAnchorNode.remove();
+        });
+    }
 
     // Tab Switching Logic
     tabs.forEach(tab => {
@@ -64,6 +80,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const endTime = performance.now();
 
             if (response.ok) {
+                lastScanData = data; // Store data for export
+                if(exportBtn) exportBtn.style.display = 'block'; // Show button
                 renderResults(data);
                 updateStats(data.results, endTime - startTime);
                 targetDisplay.textContent = `Target: ${data.target} (${data.ip})`;
